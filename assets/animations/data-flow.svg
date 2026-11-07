@@ -1,26 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 200" width="700" height="200">
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 200">
   <defs>
     <style>
-      @keyframes flow { 0% { offset-distance: 0%; opacity: 1; } 100% { offset-distance: 100%; opacity: 0.2; } }
-      @keyframes process { 0%,100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.03); } }
-      @keyframes pulse-line { 0%,100% { stroke-opacity: 0.3; } 50% { stroke-opacity: 1; } }
-      .stage { fill: #0d180d; stroke: #1a3a2a; stroke-width: 1.5; rx: 10; }
-      .stage.active { animation: process 2.5s ease-in-out infinite; }
-      .pipe { stroke: #00d47e; stroke-width: 3; fill: none; opacity: 0.25; animation: pulse-line 2s ease-in-out infinite; }
-      .packet { fill: #00d47e; filter: drop-shadow(0 0 6px #00d47e); r: 4; animation: flow 5s linear infinite; }
-      .label { fill: #c8e8d0; font-family: "JetBrains Mono", "Fira Code", monospace; font-size: 11px; font-weight: 600; text-anchor: middle; }
-      .sub-label { fill: #6a8a72; font-family: "JetBrains Mono", "Fira Code", monospace; font-size: 9px; text-anchor: middle; }
-      .metric { fill: #00d47e; font-family: "JetBrains Mono", "Fira Code", monospace; font-size: 10px; font-weight: 600; text-anchor: middle; }
-      .title { fill: #00d47e; font-family: "JetBrains Mono", "Fira Code", monospace; font-size: 12px; font-weight: 600; text-anchor: middle; }
-      .footer { fill: #6a8a72; font-family: "JetBrains Mono", "Fira Code", monospace; font-size: 9px; text-anchor: middle; }
+      @media (prefers-reduced-motion: reduce) { * { animation: none !important; } }
+      .mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace; }
     </style>
     <linearGradient id="pipeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#00d47e" stop-opacity="0.15"/>
-      <stop offset="50%" stop-color="#00d47e" stop-opacity="0.35"/>
-      <stop offset="100%" stop-color="#00d47e" stop-opacity="0.15"/>
+      <stop offset="0%" stop-color="#3d5a80" stop-opacity="0.15"/>
+      <stop offset="50%" stop-color="#4ecdc4" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#3d5a80" stop-opacity="0.15"/>
     </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
     <marker id="arrow" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
-      <path d="M0,0 L10,4 L0,8 Z" fill="#00d47e" opacity="0.6"/>
+      <path d="M0,0 L10,4 L0,8 Z" fill="#3d5a80" opacity="0.6"/>
     </marker>
   </defs>
 
@@ -30,59 +24,90 @@
     <line x1="0" y1="200" x2="700" y2="200" />
   </g>
 
-  <!-- Title -->
   <rect x="15" y="12" width="670" height="26" fill="#1a3a2a" rx="4" opacity="0.5"/>
-  <text class="title" x="350" y="30">VULNERABILITY INTELLIGENCE PIPELINE</text>
+  <text class="mono" x="350" y="30" fill="#3d5a80" font-size="12" font-weight="600" text-anchor="middle">VULNERABILITY INTELLIGENCE PIPELINE</text>
 
-  <!-- Main pipeline at y=100 (center) -->
   <g transform="translate(0, 40)">
-    <!-- Stage 1: INGEST -->
-    <rect class="stage active" x="25" y="30" width="130" height="90" style="animation-delay: 0s;" />
-    <text class="label" x="90" y="58">INGEST</text>
-    <text class="sub-label" x="90" y="74">Nmap / ZAP / httpx</text>
-    <text class="metric" x="90" y="96">2,847 req/s</text>
-    <circle class="packet" cx="90" cy="128" />
+    <rect class="stage" x="25" y="30" width="130" height="90" fill="#0d180d" stroke="#1a3a2a" stroke-width="1.5" rx="10">
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1"/>
+      <animateTransform attributeName="transform" type="scale" values="1;1.03;1" dur="2.5s" repeatCount="indefinite" additive="sum" calcMode="spline" keySplines="0.4 0 0.6 1"/>
+    </rect>
+    <text class="mono" x="90" y="58" fill="#c9d1d9" font-size="11" font-weight="600" text-anchor="middle">INGEST</text>
+    <text class="mono" x="90" y="74" fill="#5c6b73" font-size="9" text-anchor="middle">Nmap / ZAP / httpx</text>
+    <text class="mono" x="90" y="96" fill="#3d5a80" font-size="10" font-weight="600" text-anchor="middle">2,847 req/s</text>
+    <circle cx="90" cy="128" r="4" fill="#3d5a80" filter="url(#glow)">
+      <animate attributeName="opacity" values="1;0.2;1" dur="5s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1"/>
+    </circle>
 
-    <!-- Pipe 1 -->
-    <line class="pipe" x1="155" y1="75" x2="190" y2="75" marker-end="url(#arrow)" />
+    <line x1="155" y1="75" x2="190" y2="75" stroke="url(#pipeGrad)" stroke-width="3" fill="none" opacity="0.25" marker-end="url(#arrow)">
+      <animate attributeName="stroke-opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" calcMode="spline" keySplines="0.4 0 0.6 1"/>
+    </line>
 
-    <!-- Stage 2: NORMALIZE -->
-    <rect class="stage active" x="200" y="30" width="130" height="90" style="animation-delay: -0.5s;" />
-    <text class="label" x="265" y="58">NORMALIZE</text>
-    <text class="sub-label" x="265" y="74">Parse → Validate → Schema</text>
-    <text class="metric" x="265" y="96">1,923 obj/s</text>
-    <circle class="packet" cx="265" cy="128" style="animation-delay: -0.6s;" />
+    <rect x="200" y="30" width="130" height="90" fill="#0d180d" stroke="#1a3a2a" stroke-width="1.5" rx="10">
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite" begin="0.5s" calcMode="spline" keySplines="0.4 0 0.6 1"/>
+      <animateTransform attributeName="transform" type="scale" values="1;1.03;1" dur="2.5s" repeatCount="indefinite" additive="sum" begin="0.5s" calcMode="spline" keySplines="0.4 0 0.6 1"/>
+    </rect>
+    <text class="mono" x="265" y="58" fill="#c9d1d9" font-size="11" font-weight="600" text-anchor="middle">NORMALIZE</text>
+    <text class="mono" x="265" y="74" fill="#5c6b73" font-size="9" text-anchor="middle">Parse → Validate → Schema</text>
+    <text class="mono" x="265" y="96" fill="#3d5a80" font-size="10" font-weight="600" text-anchor="middle">1,923 obj/s</text>
+    <circle cx="265" cy="128" r="4" fill="#3d5a80" filter="url(#glow)">
+      <animate attributeName="opacity" values="1;0.2;1" dur="5s" repeatCount="indefinite" begin="0.6s" calcMode="spline" keySplines="0.4 0 0.6 1"/>
+    </circle>
 
-    <!-- Pipe 2 -->
-    <line class="pipe" x1="330" y1="75" x2="365" y2="75" marker-end="url(#arrow)" />
+    <line x1="330" y1="75" x2="365" y2="75" stroke="url(#pipeGrad)" stroke-width="3" fill="none" opacity="0.25" marker-end="url(#arrow)">
+      <animate attributeName="stroke-opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" begin="0.5s" calcMode="spline" keySplines="0.4 0 0.6 1"/>
+    </line>
 
-    <!-- Stage 3: CORRELATE -->
-    <rect class="stage active" x="375" y="30" width="150" height="90" style="animation-delay: -1s;" />
-    <text class="label" x="450" y="58">CORRELATE</text>
-    <text class="sub-label" x="450" y="74">CVE / KEV / EPSS / ATT&CK</text>
-    <text class="metric" x="450" y="96">94.2% match</text>
-    <circle class="packet" cx="450" cy="128" style="animation-delay: -1.2s;" />
+    <rect x="375" y="30" width="150" height="90" fill="#0d180d" stroke="#1a3a2a" stroke-width="1.5" rx="10">
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite" begin="1s" calcMode="spline" keySplines="0.4 0 0.6 1"/>
+      <animateTransform attributeName="transform" type="scale" values="1;1.03;1" dur="2.5s" repeatCount="indefinite" additive="sum" begin="1s" calcMode="spline" keySplines="0.4 0 0.6 1"/>
+    </rect>
+    <text class="mono" x="450" y="58" fill="#c9d1d9" font-size="11" font-weight="600" text-anchor="middle">CORRELATE</text>
+    <text class="mono" x="450" y="74" fill="#5c6b73" font-size="9" text-anchor="middle">CVE / KEV / EPSS / ATT&amp;CK</text>
+    <text class="mono" x="450" y="96" fill="#3d5a80" font-size="10" font-weight="600" text-anchor="middle">94.2% match</text>
+    <circle cx="450" cy="128" r="4" fill="#3d5a80" filter="url(#glow)">
+      <animate attributeName="opacity" values="1;0.2;1" dur="5s" repeatCount="indefinite" begin="1.2s" calcMode="spline" keySplines="0.4 0 0.6 1"/>
+    </circle>
 
-    <!-- Pipe 3 -->
-    <line class="pipe" x1="525" y1="75" x2="560" y2="75" marker-end="url(#arrow)" />
+    <line x1="525" y1="75" x2="560" y2="75" stroke="url(#pipeGrad)" stroke-width="3" fill="none" opacity="0.25" marker-end="url(#arrow)">
+      <animate attributeName="stroke-opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" begin="1s" calcMode="spline" keySplines="0.4 0 0.6 1"/>
+    </line>
 
-    <!-- Stage 4: RISK SCORE -->
-    <rect class="stage active" x="570" y="30" width="115" height="90" style="animation-delay: -1.5s;" />
-    <text class="label" x="627" y="58">RISK SCORE</text>
-    <text class="sub-label" x="627" y="74">CVSS + EPSS + KEV</text>
-    <text class="metric" x="627" y="96">8.7 / 10</text>
-    <circle class="packet" cx="627" cy="128" style="animation-delay: -1.8s;" />
+    <rect x="570" y="30" width="115" height="90" fill="#0d180d" stroke="#1a3a2a" stroke-width="1.5" rx="10">
+      <animate attributeName="opacity" values="0.6;1;0.6" dur="2.5s" repeatCount="indefinite" begin="1.5s" calcMode="spline" keySplines="0.4 0 0.6 1"/>
+      <animateTransform attributeName="transform" type="scale" values="1;1.03;1" dur="2.5s" repeatCount="indefinite" additive="sum" begin="1.5s" calcMode="spline" keySplines="0.4 0 0.6 1"/>
+    </rect>
+    <text class="mono" x="627" y="58" fill="#c9d1d9" font-size="11" font-weight="600" text-anchor="middle">RISK SCORE</text>
+    <text class="mono" x="627" y="74" fill="#5c6b73" font-size="9" text-anchor="middle">CVSS + EPSS + KEV</text>
+    <text class="mono" x="627" y="96" fill="#3d5a80" font-size="10" font-weight="600" text-anchor="middle">8.7 / 10</text>
+    <circle cx="627" cy="128" r="4" fill="#3d5a80" filter="url(#glow)">
+      <animate attributeName="opacity" values="1;0.2;1" dur="5s" repeatCount="indefinite" begin="1.8s" calcMode="spline" keySplines="0.4 0 0.6 1"/>
+    </circle>
   </g>
 
-  <!-- Continuous packet stream on pipes -->
   <g>
-    <circle class="packet" style="animation-delay: 0s;" offset-path="path('M 155 75 L 560 75')" />
-    <circle class="packet" style="animation-delay: -1.25s;" offset-path="path('M 155 75 L 560 75')" />
-    <circle class="packet" style="animation-delay: -2.5s;" offset-path="path('M 155 75 L 560 75')" />
-    <circle class="packet" style="animation-delay: -3.75s;" offset-path="path('M 155 75 L 560 75')" />
+    <circle r="4" fill="#3d5a80" filter="url(#glow)">
+      <animateMotion path="M 155 75 L 560 75" dur="5s" repeatCount="indefinite" rotate="auto">
+        <animate attributeName="opacity" values="1;0.2;1" dur="5s" repeatCount="indefinite"/>
+      </animateMotion>
+    </circle>
+    <circle r="4" fill="#3d5a80" filter="url(#glow)">
+      <animateMotion path="M 155 75 L 560 75" dur="5s" repeatCount="indefinite" begin="1.25s" rotate="auto">
+        <animate attributeName="opacity" values="1;0.2;1" dur="5s" repeatCount="indefinite"/>
+      </animateMotion>
+    </circle>
+    <circle r="4" fill="#3d5a80" filter="url(#glow)">
+      <animateMotion path="M 155 75 L 560 75" dur="5s" repeatCount="indefinite" begin="2.5s" rotate="auto">
+        <animate attributeName="opacity" values="1;0.2;1" dur="5s" repeatCount="indefinite"/>
+      </animateMotion>
+    </circle>
+    <circle r="4" fill="#3d5a80" filter="url(#glow)">
+      <animateMotion path="M 155 75 L 560 75" dur="5s" repeatCount="indefinite" begin="3.75s" rotate="auto">
+        <animate attributeName="opacity" values="1;0.2;1" dur="5s" repeatCount="indefinite"/>
+      </animateMotion>
+    </circle>
   </g>
 
-  <!-- Footer metrics bar -->
   <rect x="25" y="162" width="650" height="26" fill="#1a3a2a" rx="6" opacity="0.5"/>
-  <text class="footer" x="350" y="180">THROUGHPUT: 2,847 events/sec  •  LATENCY (p99): 14ms  •  ERROR RATE: 0.018%  •  QUEUE: 12 pending</text>
+  <text class="mono" x="350" y="180" fill="#5c6b73" font-size="9" text-anchor="middle">THROUGHPUT: 2,847 events/sec  •  LATENCY (p99): 14ms  •  ERROR RATE: 0.018%  •  QUEUE: 12 pending</text>
 </svg>

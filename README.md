@@ -1,20 +1,24 @@
-<div align="center">
+﻿<div align="center">
 
-# RAVEN
+![R.A.V.E.N](assets/banner.svg)
+
+<br><br>
+
+# R.A.V.E.N
 
 ### Risk-Aware Autonomous Vulnerability Exploration Network
 
-> A unified, locally-hosted cybersecurity assessment platform for authorized security testing.
+> A unified, locally-hosted cybersecurity assessment platform for authorized security testing.  
 > Built for engineers who value auditability, control, and local-first architecture.
 
----
+<br><br>
 
-![License](https://img.shields.io/github/license/nandanamin/raven?style=flat-square&color=00ff88)
-![Python](https://img.shields.io/badge/Python-3.12+-00ff88?style=flat-square&logo=python&logoColor=0d1117)
-![React](https://img.shields.io/badge/React-18-00ff88?style=flat-square&logo=react&logoColor=0d1117)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.110-00ff88?style=flat-square&logo=fastapi&logoColor=0d1117)
-![Docker](https://img.shields.io/badge/Docker-Ready-00ff88?style=flat-square&logo=docker&logoColor=0d1117)
-![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-00ff88?style=flat-square)
+![License](https://img.shields.io/github/license/nandanamin/raven?style=flat-square&color=3d5a80)
+![Python](https://img.shields.io/badge/Python-3.12+-3d5a80?style=flat-square&logo=python&logoColor=c9d1d9)
+![React](https://img.shields.io/badge/React-18-3d5a80?style=flat-square&logo=react&logoColor=c9d1d9)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.110-3d5a80?style=flat-square&logo=fastapi&logoColor=c9d1d9)
+![Docker](https://img.shields.io/badge/Docker-Ready-3d5a80?style=flat-square&logo=docker&logoColor=c9d1d9)
+![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows%20%7C%20macOS-3d5a80?style=flat-square)
 
 </div>
 
@@ -23,11 +27,19 @@
 ## Quick Overview
 
 | Aspect | Details |
-|
+|--------|---------|
+| Purpose | Authorized security assessment automation |
+| Architecture | Microservices (Backend + Frontend + Workers) |
+| Deployment | Docker Compose / Bare metal / Windows executable |
+| Database | PostgreSQL 16 (asyncpg) + Redis 7 |
+| Inference | Ollama (local, no API keys) |
+| Scanning | Nmap, OWASP ZAP, httpx |
+| Intel Feeds | NVD, CISA KEV, EPSS, MITRE ATT&CK |
+| Policy | Mandatory allowlist + 3 execution levels |
 
 ---
 
-## Live Platform Animations
+## Platform Animations
 
 <p align="center">
   <img src="assets/animations/network-scan.svg" alt="Network Scan Animation" width="600"><br>
@@ -48,16 +60,6 @@
   <img src="assets/animations/attack-graph.svg" alt="Attack Graph" width="600"><br>
   <em>Attack Graph — Evidence-backed attack paths, critical path highlighting, lateral movement visualization</em>
 </p>
-
---------|---------|
-| Purpose | Authorized security assessment automation |
-| Architecture | Microservices (Backend + Frontend + Workers) |
-| Deployment | Docker Compose / Bare metal / Windows executable |
-| Database | PostgreSQL 16 (asyncpg) + Redis 7 |
-| Inference | Ollama (local, no API keys) |
-| Scanning | Nmap, OWASP ZAP, httpx |
-| Intel Feeds | NVD, CISA KEV, EPSS, MITRE ATT&CK |
-| Policy | Mandatory allowlist + 3 execution levels |
 
 ---
 
@@ -364,37 +366,37 @@ flowchart LR
 
 ### Step-by-Step
 
-1. **Create Assessment** -> `Assessments -> New Assessment`
+1. **Create Assessment** → `Assessments → New Assessment`
    - Name, description, execution level (L1/L2/L3)
    - Scope: domains, IPs, CIDRs (must be in `ALLOWED_TARGETS`)
 
-2. **Reconnaissance** -> `Reconnaissance`
+2. **Reconnaissance** → `Reconnaissance`
    - Select assessment
    - Choose: Host Discovery / Port Scan / Service Enum / HTTP Discovery
-   - Execute -> Review discovered assets
+   - Execute → Review discovered assets
 
-3. **Vulnerability Intelligence** -> `Intel`
+3. **Vulnerability Intelligence** → `Intel`
    - Auto-correlates discovered services with CVE/KEV/EPSS/ATT&CK
    - Review matches, confidence scores
 
-4. **Reasoning Engine** -> `Analysis`
+4. **Reasoning Engine** → `Analysis`
    - Check Ollama status
    - Review structured proposals (action, target, reason, evidence, risk)
    - Approve/Reject (Policy Engine enforces)
 
-5. **Execute Tests** -> `Findings`
+5. **Execute Tests** → `Findings`
    - Policy-approved tests run via Test Executor
    - Evidence auto-collected with SHA-256 hashes
 
-6. **Attack Graph** -> `Attack Graph`
+6. **Attack Graph** → `Attack Graph`
    - Visualize asset-service-vuln-finding relationships
    - Evidence-backed paths only
 
-7. **Risk Analysis** -> `Analytics`
+7. **Risk Analysis** → `Analytics`
    - Contextual risk scores with explanations
    - Distribution by severity, validation status
 
-8. **Generate Report** -> `Reports`
+8. **Generate Report** → `Reports`
    - Select format: PDF / HTML / JSON
    - Configure sections
    - Download
@@ -465,7 +467,7 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
-Triggers: Linux/Windows builds -> Docker images -> GitHub Release with artifacts
+Triggers: Linux/Windows builds → Docker images → GitHub Release with artifacts
 
 **Release Artifacts:**
 - `raven-windows-vX.Y.Z.zip` - Windows executable + launcher
@@ -617,11 +619,11 @@ MIT License - see [LICENSE](LICENSE) for details.
 <details>
 <summary><b>Project Statistics</b></summary>
 
-![Lines of Code](https://img.shields.io/tokei/lines/github/nandanamin/raven?style=flat-square&color=00ff88)
-![Repo Size](https://img.shields.io/github/repo-size/nandanamin/raven?style=flat-square&color=00ff88)
-![Last Commit](https://img.shields.io/github/last-commit/nandanamin/raven?style=flat-square&color=00ff88)
-![Issues](https://img.shields.io/github/issues/nandanamin/raven?style=flat-square&color=00ff88)
-![Stars](https://img.shields.io/github/stars/nandanamin/raven?style=flat-square&color=00ff88)
-![Forks](https://img.shields.io/github/forks/nandanamin/raven?style=flat-square&color=00ff88)
+![Lines of Code](https://img.shields.io/tokei/lines/github/nandanamin/raven?style=flat-square&color=3d5a80)
+![Repo Size](https://img.shields.io/github/repo-size/nandanamin/raven?style=flat-square&color=3d5a80)
+![Last Commit](https://img.shields.io/github/last-commit/nandanamin/raven?style=flat-square&color=3d5a80)
+![Issues](https://img.shields.io/github/issues/nandanamin/raven?style=flat-square&color=3d5a80)
+![Stars](https://img.shields.io/github/stars/nandanamin/raven?style=flat-square&color=3d5a80)
+![Forks](https://img.shields.io/github/forks/nandanamin/raven?style=flat-square&color=3d5a80)
 
 </details>
