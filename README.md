@@ -1,6 +1,6 @@
 ﻿<div align="center">
 
-![R.A.V.E.N](assets/banner.svg)
+<img src="assets/banner.svg" alt="R.A.V.E.N">
 
 <br><br>
 
@@ -8,7 +8,7 @@
 
 ### Risk-Aware Autonomous Vulnerability Exploration Network
 
-> A unified, locally-hosted cybersecurity assessment platform for authorized security testing.  
+> A unified, locally-hosted cybersecurity assessment platform for authorized security testing.
 > Built for engineers who value auditability, control, and local-first architecture.
 
 <br><br>
@@ -36,30 +36,6 @@
 | Scanning | Nmap, OWASP ZAP, httpx |
 | Intel Feeds | NVD, CISA KEV, EPSS, MITRE ATT&CK |
 | Policy | Mandatory allowlist + 3 execution levels |
-
----
-
-## Platform Animations
-
-<p align="center">
-  <img src="assets/animations/network-scan.svg" alt="Network Scan Animation" width="600"><br>
-  <em>Network Reconnaissance — Real-time host discovery, port scanning, and service enumeration with scan rings and data packets</em>
-</p>
-
-<p align="center">
-  <img src="assets/animations/data-flow.svg" alt="Data Flow Pipeline" width="700"><br>
-  <em>Vulnerability Intelligence Pipeline — Ingest → Parse → Correlate → Risk Score with live throughput metrics</em>
-</p>
-
-<p align="center">
-  <img src="assets/animations/neural-reasoning.svg" alt="Neural Reasoning" width="600"><br>
-  <em>Reasoning Engine — Multi-layer neural inference with synapse firing, thought bubbles showing structured proposals</em>
-</p>
-
-<p align="center">
-  <img src="assets/animations/attack-graph.svg" alt="Attack Graph" width="600"><br>
-  <em>Attack Graph — Evidence-backed attack paths, critical path highlighting, lateral movement visualization</em>
-</p>
 
 ---
 
@@ -244,12 +220,12 @@
 
 | Tool | Minimum Version | Purpose |
 |------|-----------------|---------|
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" width="16" height="16"> Python | 3.12+ | Backend runtime |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" width="16" height="16"> Node.js | 20+ | Frontend build/runtime |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/npm/npm-original-wordmark.svg" width="16" height="16"> npm | 10+ | Frontend package manager |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" width="16" height="16"> Git | 2.40+ | Version control |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" width="16" height="16"> Docker | 24+ | Containerized services |
-| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" width="16" height="16"> Docker Compose | 2.20+ | Multi-container orchestration |
+| Python | 3.12+ | Backend runtime |
+| Node.js | 20+ | Frontend build/runtime |
+| npm | 10+ | Frontend package manager |
+| Git | 2.40+ | Version control |
+| Docker | 24+ | Containerized services |
+| Docker Compose | 2.20+ | Multi-container orchestration |
 | Ollama | Latest | Local inference engine |
 | Nmap | 7.94+ | Network scanning |
 | OWASP ZAP | 2.14+ | Web application scanning |
