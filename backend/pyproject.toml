@@ -1,0 +1,103 @@
+ [build-system]
+ requires = ["setuptools>=61.0"]
+ build-backend = "setuptools.build_meta"
+ 
+ [project]
+ name = "raven-backend"
+ version = "0.1.0"
+ description = "RAVEN Backend - Risk-Aware Autonomous Vulnerability Exploration Network"
+ readme = "README.md"
+ requires-python = ">=3.12"
+ dependencies = []
+ 
+ [project.optional-dependencies]
+ dev = [
+     "pytest>=7.4.0",
+     "pytest-asyncio>=0.23.0",
+     "pytest-cov>=4.1.0",
+     "mypy>=1.9.0",
+     "ruff>=0.4.0",
+     "pre-commit>=3.6.0",
+ ]
+ 
+ [tool.ruff]
+ line-length = 100
+ target-version = "py312"
+ select = [
+     "E",   # pycodestyle errors
+     "W",   # pycodestyle warnings
+     "F",   # pyflakes
+     "I",   # isort
+     "N",   # pep8-naming
+     "UP",  # pyupgrade
+     "B",   # flake8-bugbear
+     "C4",  # flake8-comprehensions
+     "T20", # flake8-print
+     "PTH", # flake8-use-pathlib
+ ]
+ ignore = [
+     "E501",  # line too long (handled by formatter)
+     "B008",  # function calls in default arguments
+ ]
+ fixable = ["ALL"]
+ 
+ [tool.ruff.format]
+ quote-style = "double"
+ indent-style = "space"
+ skip-magic-trailing-comma = false
+ line-ending = "auto"
+ 
+ [tool.mypy]
+ python_version = "3.12"
+ strict = true
+ warn_return_any = true
+ warn_unused_configs = true
+ disallow_untyped_defs = true
+ disallow_incomplete_defs = true
+ check_untyped_defs = true
+ no_implicit_optional = true
+ no_implicit_reexport = true
+ implicit_reexport = false
+ 
+ [[tool.mypy.overrides]]
+ module = [
+     "sqlalchemy.*",
+     "alembic.*",
+     "celery.*",
+     "redis.*",
+     "httpx.*",
+     "pydantic.*",
+     "fastapi.*",
+     "uvicorn.*",
+     "jose.*",
+     "passlib.*",
+ ]
+ ignore_missing_imports = true
+ 
+ [tool.pytest.ini_options]
+ asyncio_mode = "auto"
+ testpaths = ["tests"]
+ python_files = ["test_*.py"]
+ python_classes = ["Test*"]
+ python_functions = ["test_*"]
+ addopts = [
+     "--strict-markers",
+     "--strict-config",
+     "-ra",
+ ]
+ 
+ [tool.coverage.run]
+ source = ["app"]
+ omit = [
+     "*/tests/*",
+     "*/migrations/*",
+ ]
+ 
+ [tool.coverage.report]
+ exclude_lines = [
+     "pragma: no cover",
+     "def __repr__",
+     "raise AssertionError",
+     "raise NotImplementedError",
+     "if __name__ == .__main__.:",
+ ]

@@ -1,0 +1,144 @@
+import pathlib
+content = """# Vulnerability Intelligence
+
+Design and implementation of the VulnIntel module for CVE ingestion, enrichment, and correlation.
+
+## Overview
+
+VulnIntel provides a local, cached vulnerability intelligence database sourced from free, authoritative feeds:
+
+- NVD - National Vulnerability Database (CVE, CVSS, CWE, CPE)
+- EPSS - Exploit Prediction Scoring System (exploit probability)
+- CISA KEV - Known Exploited Vulnerabilities Catalog
+- MITRE ATT&CK - Adversary tactics, techniques, and procedures
+
+All intelligence is cached locally with explicit refresh operations. No paid APIs required.
+
+## Data Sources
+
+### NVD (National Vulnerability Database)
+
+Source: https://nvd.nist.gov/feeds/json/cve/1.1/
+
+Files: nvdcve-1.1-recent.json.gz (last 30 days), nvdcve-1.1-YYYY.json.gz (annual), nvdcve-1.1-modified.json.gz (recently modified)
+
+Parsed Fields: CVE ID, description, published/modified dates, CVSS v3.1 vector/base score/severity, CWE IDs, CPE 2.3 matches, References
+
+### EPSS (Exploit Prediction Scoring System)
+
+Source: https://epss.cyentia.com/epss_scores.csv.gz
+
+Fields: CVE ID, EPSS score (0.0-1.0), Percentile (0-100), Date
+
+### CISA KEV (Known Exploited Vulnerabilities)
+
+Source: https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json
+
+Fields: CVE ID, Vendor, product, vulnerability name, date added, description, required action, due date
+
+### MITRE ATT&CK
+
+Source: https://github.com/mitre/cti (STIX bundles)
+
+Parsed: Enterprise techniques, sub-techniques, tactics, platforms, data sources, detection/mitigation guidance
+
+## Database Schema
+
+### Vulnerabilities Table
+
+```sql
+CREATE TABLE vulnerabilities (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    cve_id VARCHAR(20) NOT NULL UNIQUE,
+    cvss_vector VARCHAR(200),
+    cvss_score DECIMAL(3,1),
+    cvss_version VARCHAR(10) DEFAULT '3.1',
+    epss_score DECIMAL(4,3),
+    epss_percentile DECIMAL(5,2),
+    kev_listed BOOLEAN NOT NULL DEFAULT FALSE,
+    kev_date DATE,
+    attack_techniques JSONB NOT NULL DEFAULT '[]',
+    description TEXT,
+    references JSONB NOT NULL DEFAULT '[]',
+    affected_products JSONB NOT NULL DEFAULT '[]',
+    cwe_ids JSONB NOT NULL DEFAULT '[]',
+    fetched_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX ix_vuln_cve ON vulnerabilities(cve_id);
+CREATE INDEX ix_vuln_cvss ON vulnerabilities(cvss_score DESC);
+CREATE INDEX ix_vuln_epss ON vulnerabilities(epss_score DESC);
+CREATE INDEX ix_vuln_kev ON vulnerabilities(kev_listed) WHERE kev_listed;
+CREATE INDEX ix_vuln_techniques_gin ON vulnerabilities USING GIN(attack_techniques);
+CREATE INDEX ix_vuln_products_gin ON vulnerabilities USING GIN(affected_products);
+```
+
+### Feed Status Table
+
+```sql
+CREATE TABLE intel_feed_status (
+    feed_name VARCHAR(50) PRIMARY KEY,
+    last_fetch TIMESTAMPTZ,
+    last_success TIMESTAMPTZ,
+    records_processed INTEGER,
+    records_updated INTEGER,
+    records_failed INTEGER,
+    error TEXT,
+    next_scheduled TIMESTAMPTZ
+);
+```
+
+## Ingestion Pipeline
+
+### NVD Ingestion
+
+Processes recent and modified feeds incrementally, annual files for full ingestion.
+
+### EPSS Ingestion
+
+Downloads CSV, parses in batches of 1000, bulk updates EPS scores.
+
+### KEV Ingestion
+
+Downloads JSON, upserts each vulnerability.
+
+### ATT&CK Ingestion
+
+Clones MITRE CTI repo, parses STIX bundles for techniques and mappings.
+
+## Correlation Engine
+
+Matches discovered services to vulnerabilities using CPE criteria from service fingerprints.
+
+Confidence scoring combines: CPE exact match (50), Product+version match (30), Product only (15), CVSS critical (10), CVSS high (5), KEV listed (15), EPSS > 0.5 (10). Max 100.
+
+## Refresh Operations
+
+Scheduled via Celery beat: NVD incremental daily 3 AM, EPSS daily 4 AM, KEV daily 5 AM, ATT&CK weekly Monday 6 AM.
+
+Manual refresh via POST /api/v1/intel/feeds/refresh
+
+## Storage Estimates
+
+NVD: ~250K records, ~500 MB; EPSS: ~200K, ~50 MB; KEV: ~1.2K, ~1 MB; ATT&CK: ~500, ~5 MB. Total ~556 MB.
+
+## Configuration
+
+Settings: NVD_FEED_URL, EPSS_FEED_URL, KEV_FEED_URL, ATTACK_REPO_URL, INTEL_CACHE_TTL_HOURS=24, INTEL_REFRESH_ENABLED=true, INTEL_MAX_CVES_PER_CORRELATION=50
+
+## Future Enhancements
+
+- SBOM Integration: Parse CycloneDX/SPDX for direct component matching
+- Container Scanning: Correlate container image layers with CVEs
+- Exploit Code: Link to public exploit PoCs (ExploitDB, GitHub)
+- Patch Availability: Track vendor patch status
+- Custom Feeds: Support organization-specific advisories
+
+---
+
+Vulnerability intelligence version: 1.0
+Last updated: 2026-11-06
+"""
+pathlib.Path("C:/Users/nanda/OneDrive/Desktop/RAVEN/docs/vulnerability-intelligence.md").write_text(content, encoding="utf-8")
+print("done")

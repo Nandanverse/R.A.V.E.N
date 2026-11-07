@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 180" width="600" height="180">
+  <defs>
+    <style>
+      @keyframes flow { 0% { offset-distance: 0%; opacity: 1; } 100% { offset-distance: 100%; opacity: 0.3; } }
+      @keyframes process { 0%,100% { opacity: 0.6; transform: scale(1); } 50% { opacity: 1; transform: scale(1.05); } }
+      @keyframes data-pulse { 0%,100% { stroke-width: 2; opacity: 0.5; } 50% { stroke-width: 4; opacity: 1; } }
+      .stage { fill: #0d1117; stroke: #00ff88; stroke-width: 1.5; rx: 8; }
+      .stage.active { animation: process 2s ease-in-out infinite; }
+      .arrow { stroke: #00ff88; stroke-width: 2; fill: none; marker-end: url(#arrowhead); animation: data-pulse 1.5s ease-in-out infinite; }
+      .packet { fill: #00ff88; filter: drop-shadow(0 0 4px #00ff88); animation: flow 4s linear infinite; }
+      .label { fill: #00ff88; font-family: monospace; font-size: 10px; text-anchor: middle; }
+      .metric { fill: #88ffaa; font-family: monospace; font-size: 9px; text-anchor: middle; opacity: 0.8; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#00ff88" />
+    </marker>
+    <linearGradient id="pipeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00ff88" stop-opacity="0.3"/>
+      <stop offset="50%" stop-color="#00ff88" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#00ff88" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="600" height="180" fill="#050a05" />
+  <g stroke="#002200" stroke-width="0.5" opacity="0.3">
+    <line x1="0" y1="0" x2="600" y2="0" /><line x1="0" y1="60" x2="600" y2="60" /><line x1="0" y1="120" x2="600" y2="120" /><line x1="0" y1="180" x2="600" y2="180" />
+  </g>
+
+  <!-- Pipeline Stages -->
+  <g>
+    <!-- Stage 1: INGEST -->
+    <rect class="stage active" x="20" y="40" width="100" height="100" style="animation-delay: 0s;" />
+    <text class="label" x="70" y="65">INGEST</text>
+    <text class="label" x="70" y="80">Nmap/ZAP</text>
+    <text class="metric" x="70" y="105">2.4k req/s</text>
+    <circle class="packet" r="4" offset-path="path('M 70 90 L 70 130')" />
+
+    <!-- Arrow 1 -->
+    <path class="arrow" d="M 120 90 L 150 90" />
+
+    <!-- Stage 2: PARSE -->
+    <rect class="stage active" x="160" y="40" width="100" height="100" style="animation-delay: -0.4s;" />
+    <text class="label" x="210" y="65">PARSE</text>
+    <text class="label" x="210" y="80">Normalize</text>
+    <text class="metric" x="210" y="105">1.8k obj/s</text>
+    <circle class="packet" r="4" style="animation-delay: -0.5s;" offset-path="path('M 210 90 L 210 130')" />
+
+    <!-- Arrow 2 -->
+    <path class="arrow" d="M 260 90 L 290 90" />
+
+    <!-- Stage 3: CORRELATE -->
+    <rect class="stage active" x="300" y="40" width="120" height="100" style="animation-delay: -0.8s;" />
+    <text class="label" x="360" y="65">CORRELATE</text>
+    <text class="label" x="360" y="80">CVE/KEV/EPSS</text>
+    <text class="metric" x="360" y="105">94% match</text>
+    <circle class="packet" r="4" style="animation-delay: -1s;" offset-path="path('M 360 90 L 360 130')" />
+
+    <!-- Arrow 3 -->
+    <path class="arrow" d="M 420 90 L 450 90" />
+
+    <!-- Stage 4: SCORE -->
+    <rect class="stage active" x="460" y="40" width="120" height="100" style="animation-delay: -1.2s;" />
+    <text class="label" x="520" y="65">RISK SCORE</text>
+    <text class="label" x="520" y="80">CVSS+EPSS+KEV</text>
+    <text class="metric" x="520" y="105">8.7/10</text>
+    <circle class="packet" r="4" style="animation-delay: -1.5s;" offset-path="path('M 520 90 L 520 130')" />
+  </g>
+
+  <!-- Data packets flowing through pipes -->
+  <g>
+    <circle class="packet" r="3" style="animation-delay: 0s;" offset-path="path('M 120 90 L 460 90')" />
+    <circle class="packet" r="3" style="animation-delay: -1s;" offset-path="path('M 120 90 L 460 90')" />
+    <circle class="packet" r="3" style="animation-delay: -2s;" offset-path="path('M 120 90 L 460 90')" />
+    <circle class="packet" r="3" style="animation-delay: -3s;" offset-path="path('M 120 90 L 460 90')" />
+  </g>
+
+  <!-- Bottom metrics bar -->
+  <rect x="20" y="150" width="560" height="20" fill="#001100" stroke="#00ff88" stroke-width="1" rx="4" opacity="0.5" />
+  <text x="300" y="165" fill="#00ff88" font-family="monospace" font-size="11" text-anchor="middle">THROUGHPUT: 2,447 events/sec • LATENCY: 12ms p99 • ERROR RATE: 0.02%</text>
+</svg>

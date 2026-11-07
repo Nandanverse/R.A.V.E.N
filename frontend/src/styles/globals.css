@@ -1,0 +1,310 @@
+ @tailwind base;
+ @tailwind components;
+ @tailwind utilities;
+ 
+ /* Design tokens from design.md */
+ @layer base {
+   :root {
+     --bg-base: #0d0d0d;
+     --bg-elevated: #141414;
+     --bg-hover: #1a1a1a;
+     --fg-primary: #e8e8e8;
+     --fg-secondary: #a0a0a0;
+     --fg-muted: #6a6a6a;
+     --separator: #2a2a2a;
+     --border: #2a2a2a;
+     --sev-critical: #dc2626;
+     --sev-high: #ea580c;
+     --sev-medium: #ca8a04;
+     --sev-low: #16a34a;
+     --sev-info: #3b82f6;
+     --font-ui: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+     --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+   }
+ 
+   * {
+     box-sizing: border-box;
+   }
+ 
+   html {
+     font-family: var(--font-ui);
+     font-size: 14px;
+     -webkit-font-smoothing: antialiased;
+     -moz-osx-font-smoothing: grayscale;
+   }
+ 
+   body {
+     @apply bg-bg-base text-fg-primary;
+     margin: 0;
+     min-height: 100vh;
+   }
+ 
+   /* Scrollbar styling */
+   ::-webkit-scrollbar {
+     width: 8px;
+     height: 8px;
+   }
+ 
+   ::-webkit-scrollbar-track {
+     @apply bg-bg-base;
+   }
+ 
+   ::-webkit-scrollbar-thumb {
+     @apply bg-separator rounded-none;
+   }
+ 
+   ::-webkit-scrollbar-thumb:hover {
+     @apply bg-fg-muted;
+   }
+ 
+   /* Focus styles - visible focus indicators for accessibility */
+   *:focus-visible {
+     @apply outline-none ring-2 ring-sev-info ring-offset-2 ring-offset-bg-base;
+   }
+ 
+   /* Selection */
+   ::selection {
+     @apply bg-sev-info/30 text-fg-primary;
+   }
+ }
+ 
+ @layer components {
+   /* Button variants */
+   .btn {
+     @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium rounded-sm transition-colors duration-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sev-info focus-visible:ring-offset-2 focus-visible:ring-offset-bg-base disabled:opacity-50 disabled:cursor-not-allowed;
+   }
+ 
+   .btn-primary {
+     @apply btn bg-sev-info text-white hover:bg-sev-info/90;
+   }
+ 
+   .btn-secondary {
+     @apply btn bg-bg-elevated text-fg-primary border border-border hover:bg-bg-hover;
+   }
+ 
+   .btn-danger {
+     @apply btn bg-sev-critical text-white hover:bg-sev-critical/90;
+   }
+ 
+   .btn-ghost {
+     @apply btn bg-transparent text-fg-secondary hover:text-fg-primary hover:bg-bg-hover;
+   }
+ 
+   /* Input variants */
+   .input {
+     @apply w-full px-3 py-2 text-sm bg-bg-elevated border border-border text-fg-primary placeholder-fg-muted rounded-sm transition-colors duration-0 focus:border-sev-info focus:ring-1 focus:ring-sev-info;
+   }
+ 
+   .input-error {
+     @apply input border-sev-critical focus:border-sev-critical focus:ring-sev-critical;
+   }
+ 
+   /* Card */
+   .card {
+     @apply bg-bg-elevated border border-border rounded-sm;
+   }
+ 
+   .card-header {
+     @apply px-4 py-3 border-b border-border;
+   }
+ 
+   .card-body {
+     @apply p-4;
+   }
+ 
+   .card-footer {
+     @apply px-4 py-3 border-t border-border bg-bg-base/50;
+   }
+ 
+   /* Badge */
+   .badge {
+     @apply inline-flex items-center px-2 py-0.5 text-xs font-medium rounded-sm;
+   }
+ 
+   .badge-critical { @apply badge bg-sev-critical/20 text-sev-critical border border-sev-critical/30; }
+   .badge-high { @apply badge bg-sev-high/20 text-sev-high border border-sev-high/30; }
+   .badge-medium { @apply badge bg-sev-medium/20 text-sev-medium border border-sev-medium/30; }
+   .badge-low { @apply badge bg-sev-low/20 text-sev-low border border-sev-low/30; }
+   .badge-info { @apply badge bg-sev-info/20 text-sev-info border border-sev-info/30; }
+   .badge-success { @apply badge bg-status-success/20 text-status-success border border-status-success/30; }
+   .badge-warning { @apply badge bg-status-warning/20 text-status-warning border border-status-warning/30; }
+   .badge-error { @apply badge bg-status-error/20 text-status-error border border-status-error/30; }
+ 
+   /* Table */
+   .table-container {
+     @apply overflow-x-auto;
+   }
+ 
+   .table {
+     @apply w-full text-sm border-collapse;
+   }
+ 
+   .table th {
+     @apply px-3 py-2 text-left font-medium text-fg-secondary bg-bg-base border-b border-border;
+   }
+ 
+   .table td {
+     @apply px-3 py-2 border-b border-separator;
+   }
+ 
+   .table tbody tr:hover {
+     @apply bg-bg-hover;
+   }
+ 
+   .table tbody tr:last-child td {
+     @apply border-b-0;
+   }
+ 
+   /* Tabs */
+   .tabs {
+     @apply flex border-b border-border;
+   }
+ 
+   .tab {
+     @apply px-4 py-2 text-sm font-medium text-fg-secondary border-b-2 border-transparent hover:text-fg-primary hover:border-sev-info transition-colors duration-0;
+   }
+ 
+   .tab-active {
+     @apply text-fg-primary border-sev-info;
+   }
+ 
+   /* Sidebar */
+   .sidebar {
+     @apply fixed inset-y-0 left-0 z-40 w-64 bg-bg-elevated border-r border-border flex flex-col transition-transform duration-0;
+   }
+ 
+   .sidebar-collapsed {
+     @apply w-16;
+   }
+ 
+   /* Header */
+   .header {
+     @apply fixed top-0 right-0 left-0 z-30 h-12 bg-bg-elevated border-b border-border flex items-center justify-between px-4;
+   }
+ 
+   /* Layout */
+   .main-content {
+     @apply pt-12 pl-64 pb-8 pr-4 transition-all duration-0 min-h-screen;
+   }
+ 
+   .main-content-expanded {
+     @apply pl-16;
+   }
+ 
+   /* Empty state */
+   .empty-state {
+     @apply flex flex-col items-center justify-center py-12 px-4 text-center;
+   }
+ 
+   .empty-state-icon {
+     @apply text-fg-muted mb-3;
+   }
+ 
+   .empty-state-title {
+     @apply text-lg font-medium text-fg-primary mb-1;
+   }
+ 
+   .empty-state-description {
+     @apply text-sm text-fg-muted max-w-md;
+   }
+ 
+   /* Loading */
+   .loading-spinner {
+     @apply animate-spin rounded-full border-2 border-separator border-t-sev-info;
+   }
+ 
+   /* Tooltip */
+   .tooltip {
+     @apply absolute z-50 px-2 py-1 text-xs bg-bg-base text-fg-primary border border-border rounded-sm shadow-lg;
+   }
+ 
+   /* Dropdown */
+   .dropdown {
+     @apply absolute z-50 min-w-[160px] bg-bg-elevated border border-border rounded-sm shadow-lg py-1;
+   }
+ 
+   .dropdown-item {
+     @apply w-full px-3 py-2 text-sm text-fg-primary hover:bg-bg-hover flex items-center gap-2;
+   }
+ 
+   .dropdown-divider {
+     @apply border-t border-separator my-1;
+   }
+ 
+   /* Modal */
+   .modal-overlay {
+     @apply fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4;
+   }
+ 
+   .modal {
+     @apply bg-bg-elevated border border-border rounded-sm w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col;
+   }
+ 
+   .modal-header {
+     @apply px-4 py-3 border-b border-border flex items-center justify-between;
+   }
+ 
+   .modal-body {
+     @apply p-4 overflow-y-auto;
+   }
+ 
+   .modal-footer {
+     @apply px-4 py-3 border-t border-border flex justify-end gap-2;
+   }
+ 
+   /* Form */
+   .form-group {
+     @apply mb-4;
+   }
+ 
+   .form-label {
+     @apply block text-sm font-medium text-fg-primary mb-1;
+   }
+ 
+   .form-error {
+     @apply text-sm text-sev-critical mt-1;
+   }
+ 
+   .form-hint {
+     @apply text-sm text-fg-muted mt-1;
+   }
+ 
+   /* Monospace for technical data */
+   .mono {
+     @apply font-mono text-sm;
+   }
+ 
+   .code {
+     @apply font-mono text-sm bg-bg-base px-1.5 py-0.5 rounded-sm border border-border;
+   }
+ 
+   /* Severity indicators */
+   .severity-dot {
+     @apply inline-block w-2 h-2 rounded-full;
+   }
+ 
+   .severity-critical { @apply severity-dot bg-sev-critical; }
+   .severity-high { @apply severity-dot bg-sev-high; }
+   .severity-medium { @apply severity-dot bg-sev-medium; }
+   .severity-low { @apply severity-dot bg-sev-low; }
+   .severity-info { @apply severity-dot bg-sev-info; }
+ }
+ 
+ @layer utilities {
+   /* Reduced motion - respect prefers-reduced-motion */
+   @media (prefers-reduced-motion: reduce) {
+     *,
+     *::before,
+     *::after {
+       animation-duration: 0.01ms !important;
+       animation-iteration-count: 1 !important;
+       transition-duration: 0.01ms !important;
+       scroll-behavior: auto !important;
+     }
+   }
+ 
+   /* Text truncation */
+   .truncate-1 { @apply truncate; }
+   .truncate-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+   .truncate-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+ }

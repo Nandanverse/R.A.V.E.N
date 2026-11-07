@@ -1,0 +1,197 @@
+services:
+  # Database
+  db:
+    image: postgres:16-alpine
+    container_name: raven-db
+    environment:
+      POSTGRES_USER: raven
+      POSTGRES_PASSWORD: raven
+      POSTGRES_DB: raven
+    volumes:
+      - raven-db-data:/var/lib/postgresql/data
+      - ./backend/alembic:/docker-entrypoint-initdb.d/alembic:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U raven -d raven"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - raven-network
+    restart: unless-stopped
+
+  # Redis
+  redis:
+    image: redis:7-alpine
+    container_name: raven-redis
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - raven-redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - raven-network
+    restart: unless-stopped
+
+  # Ollama (Local LLM)
+  ollama:
+    image: ollama/ollama:latest
+    container_name: raven-ollama
+    volumes:
+      - raven-ollama-data:/root/.ollama
+    environment:
+      OLLAMA_HOST: 0.0.0.0
+      OLLAMA_MODELS: /root/.ollama/models
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - raven-network
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+  # OWASP ZAP
+  zap:
+    image: owasp/zap2docker-stable:latest
+    container_name: raven-zap
+    command: zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.disablekey=true
+    ports:
+      - "8080:8080"
+    networks:
+      - raven-network
+    restart: unless-stopped
+
+  # Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: raven-backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://raven:raven@db:5432/raven
+      REDIS_URL: redis://redis:6379/0
+      OLLAMA_BASE_URL: http://ollama:11434
+      ZAP_API_URL: http://zap:8080
+      API_HOST: 0.0.0.0
+      API_PORT: 8000
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production-min-32-chars}
+      DEBUG: ${DEBUG:-false}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      ALLOWED_TARGETS: ${ALLOWED_TARGETS:-}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost,http://localhost:80,http://frontend}
+    volumes:
+      - raven-evidence:/app/evidence
+      - raven-reports:/app/reports
+      - raven-logs:/app/logs
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    networks:
+      - raven-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Celery Worker
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: raven-worker
+    command: celery -A app.tasks.celery_app worker --loglevel=info --concurrency=4
+    environment:
+      DATABASE_URL: postgresql+asyncpg://raven:raven@db:5432/raven
+      REDIS_URL: redis://redis:6379/0
+      OLLAMA_BASE_URL: http://ollama:11434
+      ZAP_API_URL: http://zap:8080
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production-min-32-chars}
+      DEBUG: ${DEBUG:-false}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    volumes:
+      - raven-evidence:/app/evidence
+      - raven-reports:/app/reports
+      - raven-logs:/app/logs
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    networks:
+      - raven-network
+    restart: unless-stopped
+
+  # Celery Beat (Scheduler)
+  scheduler:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: raven-scheduler
+    command: celery -A app.tasks.celery_app beat --loglevel=info
+    environment:
+      DATABASE_URL: postgresql+asyncpg://raven:raven@db:5432/raven
+      REDIS_URL: redis://redis:6379/0
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production-min-32-chars}
+      DEBUG: ${DEBUG:-false}
+      LOG_LEVEL: ${LOG_LEVEL:-INFO}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - raven-network
+    restart: unless-stopped
+
+  # Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: raven-frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - raven-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  raven-db-data:
+  raven-redis-data:
+  raven-ollama-data:
+  raven-evidence:
+  raven-reports:
+  raven-logs:
+
+networks:
+  raven-network:
+    driver: bridge

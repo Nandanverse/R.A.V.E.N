@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300" width="500" height="300">
+  <defs>
+    <style>
+      @keyframes node-pulse { 0%,100% { opacity: 0.5; r: 6; } 50% { opacity: 1; r: 10; filter: drop-shadow(0 0 8px #ff4444); } }
+      @keyframes edge-flow { 0% { stroke-dashoffset: 20; opacity: 0.3; } 100% { stroke-dashoffset: 0; opacity: 1; } }
+      @keyframes path-highlight { 0%,100% { stroke-width: 1.5; opacity: 0.4; } 50% { stroke-width: 3; opacity: 1; filter: drop-shadow(0 0 6px #ff4444); } }
+      @keyframes alert-pulse { 0%,100% { opacity: 0.6; } 50% { opacity: 1; transform: scale(1.1); } }
+      .node-asset { fill: #00ff88; }
+      .node-vuln { fill: #ff4444; }
+      .node-exploit { fill: #ffaa00; }
+      .node-critical { animation: node-pulse 2s ease-in-out infinite; }
+      .edge { stroke: #ff4444; stroke-width: 1.5; fill: none; stroke-dasharray: 8 4; animation: edge-flow 1.5s linear infinite; }
+      .edge-evidence { stroke: #00ff88; stroke-width: 1; fill: none; opacity: 0.5; stroke-dasharray: 4 4; }
+      .path-critical { stroke: #ff4444; stroke-width: 2.5; fill: none; animation: path-highlight 2s ease-in-out infinite; }
+      .alert { fill: #ff4444; filter: drop-shadow(0 0 6px #ff4444); animation: alert-pulse 1s ease-in-out infinite; }
+      .label { fill: #cccccc; font-family: monospace; font-size: 9px; text-anchor: middle; }
+      .severity { fill: #ff4444; font-family: monospace; font-size: 8px; text-anchor: middle; }
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="5" refX="7" refY="2.5" orient="auto">
+      <path d="M0,0 L8,2.5 L0,5 Z" fill="#ff4444" />
+    </marker>
+  </defs>
+
+  <rect width="500" height="300" fill="#0a0505" />
+  <g stroke="#220000" stroke-width="0.5" opacity="0.2">
+    <line x1="0" y1="0" x2="500" y2="0" /><line x1="0" y1="75" x2="500" y2="75" /><line x1="0" y1="150" x2="500" y2="150" /><line x1="0" y1="225" x2="500" y2="225" /><line x1="0" y1="300" x2="500" y2="300" />
+  </g>
+
+  <!-- Assets (green nodes) -->
+  <g>
+    <circle class="node-asset node-critical" cx="80" cy="60" r="10" />
+    <text class="label" x="80" y="30">web.app.corp</text>
+    <text class="severity" x="80" y="80">HTTP/HTTPS</text>
+
+    <circle class="node-asset node-critical" cx="200" cy="60" r="10" style="animation-delay: -0.5s;" />
+    <text class="label" x="200" y="30">api.internal</text>
+    <text class="severity" x="200" y="80">REST API</text>
+
+    <circle class="node-asset" cx="350" cy="60" r="9" style="animation-delay: -1s;" />
+    <text class="label" x="350" y="30">db.cluster</text>
+    <text class="severity" x="350" y="80">PostgreSQL</text>
+
+    <circle class="node-asset" cx="420" cy="140" r="9" style="animation-delay: -1.5s;" />
+    <text class="label" x="420" y="110">ldap.srv</text>
+    <text class="severity" x="420" y="160">LDAP</text>
+
+    <circle class="node-asset" cx="80" cy="220" r="9" style="animation-delay: -2s;" />
+    <text class="label" x="80" y="190">file.srv</text>
+    <text class="severity" x="80" y="240">SMB/NFS</text>
+  </g>
+
+  <!-- Vulnerabilities (red nodes) -->
+  <g>
+    <circle class="node-vuln node-critical" cx="80" cy="140" r="12" />
+    <text class="label" x="80" y="115">CVE-2023-XXXX</text>
+    <text class="severity" x="80" y="165">CVSS 9.8</text>
+    <circle class="alert" cx="80" cy="140" r="16" style="animation-delay: -0.2s;" />
+
+    <circle class="node-vuln node-critical" cx="200" cy="140" r="11" style="animation-delay: -0.3s;" />
+    <text class="label" x="200" y="115">CVE-2023-YYYY</text>
+    <text class="severity" x="200" y="165">CVSS 8.2</text>
+    <circle class="alert" cx="200" cy="140" r="15" style="animation-delay: -0.5s;" />
+
+    <circle class="node-vuln" cx="350" cy="140" r="10" style="animation-delay: -0.6s;" />
+    <text class="label" x="350" y="115">CVE-2023-ZZZZ</text>
+    <text class="severity" x="350" y="165">CVSS 7.1</text>
+  </g>
+
+  <!-- Exploit Paths (yellow nodes) -->
+  <g>
+    <circle class="node-exploit node-critical" cx="200" cy="230" r="12" />
+    <text class="label" x="200" y="205">RCE via Deserialization</text>
+    <text class="severity" x="200" y="255">EPSS 0.94</text>
+    <circle class="alert" cx="200" cy="230" r="17" style="animation-delay: -0.4s;" />
+
+    <circle class="node-exploit" cx="350" cy="230" r="10" style="animation-delay: -0.8s;" />
+    <text class="label" x="350" y="205">PrivEsc: CVE-2023-AAAA</text>
+    <text class="severity" x="350" y="255">EPSS 0.67</text>
+  </g>
+
+  <!-- Edges: Asset -> Vuln -->
+  <g class="edges">
+    <path class="edge" d="M 80 70 L 80 128" marker-end="url(#arrow)" />
+    <path class="edge" d="M 200 70 L 200 128" marker-end="url(#arrow)" />
+    <path class="edge" d="M 350 69 L 350 128" marker-end="url(#arrow)" />
+
+    <!-- Edges: Vuln -> Exploit -->
+    <path class="path-critical" d="M 80 152 L 140 218" marker-end="url(#arrow)" />
+    <path class="path-critical" d="M 200 152 L 200 218" marker-end="url(#arrow)" />
+    <path class="edge" d="M 260 140 L 340 218" marker-end="url(#arrow)" />
+    <path class="edge" d="M 350 150 L 350 220" marker-end="url(#arrow)" />
+
+    <!-- Lateral movement edges (evidence-backed) -->
+    <path class="edge-evidence" d="M 200 242 L 350 220" marker-end="url(#arrow)" />
+    <path class="edge-evidence" d="M 80 152 L 80 210" marker-end="url(#arrow)" />
+  </g>
+
+  <!-- Critical Path Highlight -->
+  <g>
+    <path class="path-critical" d="M 80 70 L 80 128 L 140 218 L 200 242 L 350 220" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(10, 10)">
+    <rect width="180" height="100" fill="#001100" stroke="#ff4444" stroke-width="1" rx="6" opacity="0.8" />
+    <circle class="node-asset" cx="25" cy="25" r="6" />
+    <text class="label" x="80" y="29">Asset</text>
+    <circle class="node-vuln" cx="25" cy="50" r="6" />
+    <text class="label" x="80" y="54">Vulnerability</text>
+    <circle class="node-exploit" cx="25" cy="75" r="6" />
+    <text class="label" x="80" y="79">Exploit Path</text>
+    <line x1="20" y1="95" x2="160" y2="95" stroke="#330000" />
+    <path class="path-critical" d="M 20 95 L 160 95" stroke-width="2" />
+    <text class="severity" x="90" y="92">CRITICAL PATH</text>
+  </g>
+
+  <!-- Risk Score -->
+  <g transform="translate(310, 10)">
+    <rect width="180" height="80" fill="#001100" stroke="#ffaa00" stroke-width="1" rx="6" opacity="0.8" />
+    <text x="90" y="30" fill="#ffaa00" font-family="monospace" font-size="14" text-anchor="middle">ATTACK PATH RISK</text>
+    <text x="90" y="55" fill="#ff4444" font-family="monospace" font-size="28" text-anchor="middle" font-weight="bold">9.4</text>
+    <text x="90" y="75" fill="#88ffaa" font-family="monospace" font-size="10" text-anchor="middle">CRITICAL • 3 hops • Evidence-backed</text>
+  </g>
+</svg>
