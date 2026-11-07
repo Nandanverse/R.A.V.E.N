@@ -569,7 +569,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 - LinkedIn: [linkedin.com/in/nandanamin](https://www.linkedin.com/in/nandanamin)
 - Instagram: [instagram.com/nandanverse](https://www.instagram.com/nandanverse/)
-- GitHub: [github.com/nandanamin](https://github.com/nandanamin)
+- GitHub: [github.com/nandanamin](https://github.com/nandanverse)
 
 ---
 
